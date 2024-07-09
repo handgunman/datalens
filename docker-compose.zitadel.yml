@@ -29,9 +29,7 @@ services:
       AUTH_CLIENT_SECRET: "${BI_SERVICE_CLIENT_SECRET}"
       AUTH_APP_CLIENT_ID: "${DL_CLIENT_ID}"
       AUTH_APP_CLIENT_SECRET: "${DL_CLIENT_SECRET}"
-    ports:
-      - 8081:8080
-  
+
     depends_on:
       - us
 
@@ -58,9 +56,7 @@ services:
       AUTH_CLIENT_SECRET: "${BI_SERVICE_CLIENT_SECRET}"
       AUTH_APP_CLIENT_ID: "${DL_CLIENT_ID}"
       AUTH_APP_CLIENT_SECRET: "${DL_CLIENT_SECRET}"
-    ports:
-      - 8082:8080
-  
+
     depends_on:
       - us
       - pg-compeng
@@ -85,14 +81,12 @@ services:
       POSTGRES_PASSWORD: us
     volumes:
       - ./metadata:/var/lib/postgresql/data
- 
-    ports:
-      - "8086:5432"
+
 
 
   us:
     container_name: datalens-us
-    image: ghcr.io/datalens-tech/datalens-us:0.214.0
+    image: ghcr.io/datalens-tech/datalens-us:0.220.0
     depends_on:
       - pg-us
     environment:
@@ -111,8 +105,6 @@ services:
       CLIENT_SECRET: "${DL_CLIENT_SECRET}"
       SERVICE_CLIENT_ID: "us"
       SERVICE_CLIENT_SECRET: "${US_SERVICE_CLIENT_SECRET}"
-    ports:
-      - "8083:8083"
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -127,7 +119,7 @@ services:
       POSTGRES_DB: zitadel
       POSTGRES_USER: zit
       POSTGRES_PASSWORD: zit
-    healthcheck:      
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "zitadel", "-U", "zit"]
       interval: '10s'
       timeout: '30s'
@@ -163,7 +155,7 @@ services:
       - 'ZITADEL_FIRSTINSTANCE_ORG_MACHINE_MACHINEKEY_TYPE=1'
       - 'ZITADEL_FIRSTINSTANCE_ORG_MACHINE_PAT_EXPIRATIONDATE=9999-01-01T00:00:00Z'
       - 'ZITADEL_DEFAULTINSTANCE_OIDCSETTINGS_ACCESSTOKENLIFETIME=0.25h'
-      - 'ZITADEL_DEFAULTINSTANCE_OIDCSETTINGS_REFRESHTOKENEXPIRATION=336h'      
+      - 'ZITADEL_DEFAULTINSTANCE_OIDCSETTINGS_REFRESHTOKENEXPIRATION=336h'
     depends_on:
       zitadel-db:
         condition: 'service_healthy'
@@ -174,9 +166,9 @@ services:
 
   datalens:
     container_name: datalens-ui
-    image: ghcr.io/datalens-tech/datalens-ui:0.1794.0
+    image: ghcr.io/datalens-tech/datalens-ui:0.1823.0
     ports:
-      - ${UI_PORT:-8080}:8080
+      - '80:8080'
     depends_on:
       - us
       - control-api
@@ -197,9 +189,9 @@ services:
       CLIENT_ID: "${DL_CLIENT_ID}"
       CLIENT_SECRET: "${DL_CLIENT_SECRET}"
       ZITADEL_PROJECT_ID: "${ZITADEL_PROJECT_ID}"
-      ZITADEL_URI: "http://localhost:8085"
+      ZITADEL_URI: "http://dl.come-on.net:8085"
       ZITADEL_INTERNAL_URI: "http://zitadel:8080"
-      APP_HOST_URI: "http://localhost:8080"
+      APP_HOST_URI: "http://dl.come-on.net:80"
       ZITADEL_COOKIE_SECRET: ${ZITADEL_COOKIE_SECRET:?missed ZITADEL_COOKIE_SECRET env}"
       SERVICE_CLIENT_ID: "charts"
       SERVICE_CLIENT_SECRET: "${CHARTS_SERVICE_CLIENT_SECRET}"
