@@ -162,7 +162,7 @@ services:
     container_name: datalens-ui
     image: ghcr.io/datalens-tech/datalens-ui:0.1906.0
     ports:
-      - ${UI_PORT:-8080}:8080
+      - '80:8080'
     depends_on:
       - us
       - control-api
@@ -183,9 +183,9 @@ services:
       CLIENT_ID: "${DL_CLIENT_ID}"
       CLIENT_SECRET: "${DL_CLIENT_SECRET}"
       ZITADEL_PROJECT_ID: "${ZITADEL_PROJECT_ID}"
-      ZITADEL_URI: "http://localhost:8085"
+      ZITADEL_URI: "http://dl.come-on.net:8085"
       ZITADEL_INTERNAL_URI: "http://zitadel:8080"
-      APP_HOST_URI: "http://localhost:8080"
+      APP_HOST_URI: "http://dl.come-on.net:80"
       ZITADEL_COOKIE_SECRET: ${ZITADEL_COOKIE_SECRET:?missed ZITADEL_COOKIE_SECRET env}"
       SERVICE_CLIENT_ID: "charts"
       SERVICE_CLIENT_SECRET: "${CHARTS_SERVICE_CLIENT_SECRET}"
